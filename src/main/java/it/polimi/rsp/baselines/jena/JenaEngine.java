@@ -54,7 +54,7 @@ public abstract class JenaEngine extends RSPEsperEngine {
 
     }
 
-    public JenaEngine(BaselineStimulus eventType, EventProcessor<Response> receiver, long t0, boolean internalTimerEnabled) {
+    public JenaEngine(BaselineStimulus eventType, EventProcessor<Response> receiver, long t0, boolean internalTimerEnabled, String provider) {
         super(receiver, new Configuration());
         this.t0 = t0;
         this.queries = new HashMap<Query, RSPListener>();
@@ -64,7 +64,7 @@ public abstract class JenaEngine extends RSPEsperEngine {
         log.info("Added [" + eventType + "] as TEvent");
         cepConfig.addEventType("TEvent", eventType);
         cepConfig.getEngineDefaults().getLogging().setEnableTimerDebug(true);
-        cep = EPServiceProviderManager.getProvider(JenaEngine.class.getName(), cepConfig);
+        cep = EPServiceProviderManager.getProvider(provider, cepConfig);
         cepAdm = cep.getEPAdministrator();
         cepRT = cep.getEPRuntime();
     }
@@ -83,6 +83,13 @@ public abstract class JenaEngine extends RSPEsperEngine {
     @Override
     public void stopProcessing() {
         log.info("Engine is closing");
+		//stop the CEP engine
+		for(String stmtName :cepAdm.getStatementNames()){
+			EPStatement stmt = cepAdm.getStatement(stmtName);
+			if(!stmt.isStopped()){
+				stmt.stop();
+			}
+		}
     }
 
     public void registerQuery(Query q) {
