@@ -86,6 +86,13 @@ public abstract class JenaEngine extends RSPEsperEngine {
     @Override
     public void stopProcessing() {
         log.info("Engine is closing");
+		//stop the CEP engine
+		for(String stmtName :cepAdm.getStatementNames()){
+			EPStatement stmt = cepAdm.getStatement(stmtName);
+			if(!stmt.isStopped()){
+				stmt.stop();
+			}
+		}
     }
 
     public ContinousQueryExecution registerQuery(Query q) {
