@@ -38,7 +38,7 @@ public abstract class JenaEngine extends RSPEsperEngine {
     private Map<Query, RSPListener> queries;
     protected final boolean internalTimerEnabled;
 
-    public JenaEngine(BaselineStimulus eventType, EventProcessor<Response> receiver, long t0) {
+    public JenaEngine(BaselineStimulus eventType, EventProcessor<Response> receiver, long t0, String provider) {
         super(receiver, new Configuration());
         this.queries = new HashMap<Query, RSPListener>();
         this.internalTimerEnabled = false;
@@ -50,14 +50,14 @@ public abstract class JenaEngine extends RSPEsperEngine {
 
         log.info("Added [" + eventType + "] as TEvent");
         cepConfig.addEventType("TEvent", eventType);
-        cep = EPServiceProviderManager.getProvider(JenaEngine.class.getName(), cepConfig);
+        cep = EPServiceProviderManager.getProvider(provider, cepConfig);
         cepAdm = cep.getEPAdministrator();
         cepRT = cep.getEPRuntime();
 
 
     }
 
-    public JenaEngine(BaselineStimulus eventType, EventProcessor<Response> receiver, long t0, boolean internalTimerEnabled) {
+    public JenaEngine(BaselineStimulus eventType, EventProcessor<Response> receiver, long t0, boolean internalTimerEnabled, String provider) {
         super(receiver, new Configuration());
         this.t0 = t0;
         this.queries = new HashMap<Query, RSPListener>();
@@ -67,7 +67,7 @@ public abstract class JenaEngine extends RSPEsperEngine {
         log.info("Added [" + eventType + "] as TEvent");
         cepConfig.addEventType("TEvent", eventType);
         cepConfig.getEngineDefaults().getLogging().setEnableTimerDebug(true);
-        cep = EPServiceProviderManager.getProvider(JenaEngine.class.getName(), cepConfig);
+        cep = EPServiceProviderManager.getProvider(provider, cepConfig);
         cepAdm = cep.getEPAdministrator();
         cepRT = cep.getEPRuntime();
     }
@@ -86,6 +86,13 @@ public abstract class JenaEngine extends RSPEsperEngine {
     @Override
     public void stopProcessing() {
         log.info("Engine is closing");
+		//stop the CEP engine
+		for(String stmtName :cepAdm.getStatementNames()){
+			EPStatement stmt = cepAdm.getStatement(stmtName);
+			if(!stmt.isStopped()){
+				stmt.stop();
+			}
+		}
     }
 
     public ContinousQueryExecution registerQuery(Query q) {
