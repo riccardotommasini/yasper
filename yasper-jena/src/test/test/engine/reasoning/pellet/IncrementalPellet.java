@@ -37,9 +37,9 @@ public class IncrementalPellet {
         ContinuousQueryExecution cqe = sr.registerQuery(q, tbox, Maintenance.INCREMENTAL, Entailment.PELLET);
 
         if (q.isSelectType())
-            sr.registerObserver(q.getId(), new SelectResponseSysOutFormatter(true)); // attaches a new *RSP-QL query to the SDS
+            sr.registerObserver(q.getName(), new SelectResponseSysOutFormatter(true)); // attaches a new *RSP-QL query to the SDS
         if (q.isConstructType())
-            sr.registerObserver(q.getId(), new ConstructResponseSysOutFormatter(true)); // attaches a new *RSP-QL query to the SDS
+            sr.registerObserver(q.getName(), new ConstructResponseSysOutFormatter(true)); // attaches a new *RSP-QL query to the SDS
 
         (new Thread(new GraphStream("Painter", "http://streamreasoning.org/iminds/massif/stream1", 1))).start();
         //(new Thread(new GraphS2RTestStream(sr, "Writer", "http://streamreasoning.org/iminds/massif/stream2", 1))).start();
