@@ -1,4 +1,4 @@
-package test.engine.reasoning.pellet;
+package engine.reasoning.pellet;
 
 import it.polimi.jasper.engine.JenaRSPQLEngineImpl;
 import it.polimi.jasper.engine.query.RSPQuery;
@@ -16,7 +16,7 @@ import org.parboiled.Parboiled;
 import org.parboiled.errors.ParseError;
 import org.parboiled.parserunners.ReportingParseRunner;
 import org.parboiled.support.ParsingResult;
-import test.engine.GraphStream;
+import engine.GraphStream;
 
 import java.io.File;
 import java.io.IOException;

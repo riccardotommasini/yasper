@@ -1,14 +1,8 @@
-package test.engine.reasoning.rhod.multistream;
+package engine.reasoning.rhod.multistream;
 
 import it.polimi.jasper.engine.JenaRSPQLEngineImpl;
 import it.polimi.jasper.engine.query.RSPQuery;
-<<<<<<< HEAD
 import it.polimi.jasper.engine.query.formatter.ResponseFormatterFactory;
-=======
-import it.polimi.jasper.engine.query.formatter.ConstructResponseSysOutFormatter;
-import it.polimi.jasper.engine.query.formatter.ResponseFormatterFactory;
-import it.polimi.jasper.engine.query.formatter.SelectResponseSysOutFormatter;
->>>>>>> 0d0d3db19324bd0be27b794b12ae18bae86a2475
 import it.polimi.jasper.parser.RSPQLParser;
 import it.polimi.yasper.core.enums.Entailment;
 import it.polimi.yasper.core.enums.Maintenance;
@@ -20,7 +14,7 @@ import org.parboiled.Parboiled;
 import org.parboiled.errors.ParseError;
 import org.parboiled.parserunners.ReportingParseRunner;
 import org.parboiled.support.ParsingResult;
-import test.engine.GraphStream;
+import engine.GraphStream;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,7 +22,7 @@ import java.io.IOException;
 /**
  * Created by Riccardo on 03/08/16.
  */
-public class NaiveJena {
+public class IncrementalJena {
 
     public static void main(String[] args) throws InterruptedException, IOException {
 
@@ -38,7 +32,7 @@ public class NaiveJena {
 
         JenaRSPQLEngineImpl sr = new JenaRSPQLEngineImpl(0);
         sr.startProcessing();
-        ContinuousQueryExecution cqe = sr.registerQuery(q, ModelFactory.createDefaultModel(), Maintenance.NAIVE, Entailment.RHODF, false);
+        ContinuousQueryExecution cqe = sr.registerQuery(q, ModelFactory.createDefaultModel(), Maintenance.INCREMENTAL, Entailment.RHODF, false);
 
         // SDS sds = sr.getSDS(q);
         // sr.registerQuery(q1, sds);
@@ -57,7 +51,7 @@ public class NaiveJena {
             sr.registerObserver(q.getId(), ResponseFormatterFactory.getConstructResponseSysOutFormatter(true)); // attaches a new *RSP-QL query to the SDS
 >>>>>>> 0d0d3db19324bd0be27b794b12ae18bae86a2475
 
-        (new Thread(new GraphStream( "Painter", "http://streamreasoning.org/iminds/massif/stream1", 1))).start();
+        (new Thread(new GraphStream("Painter", "http://streamreasoning.org/iminds/massif/stream1", 1))).start();
 
     }
 
@@ -79,7 +73,7 @@ public class NaiveJena {
     }
 
     public static String getInput() throws IOException {
-        File file = new File("/Users/riccardo/_Projects/RSP/yasper/src/test/resources/q52.rspql");
+        File file = new File("/Users/riccardo/_Projects/RSP/RSP-Baselines/src/it.polimi.jasper.test/resources/q52.rspql");
         return FileUtils.readFileToString(file);
     }
 }
