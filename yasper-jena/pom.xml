@@ -42,12 +42,11 @@
     <parent>
         <groupId>it.polimi.sr.yasper</groupId>
         <artifactId>yasper</artifactId>
-        <version>1.0.2</version>
+        <version>1.0.1</version>
     </parent>
 
     <groupId>it.polimi.sr.yasper</groupId>
     <artifactId>yasper-jena</artifactId>
-    <version>1.0.2</version>
 
     <properties>
         <jena.version>3.4.0</jena.version>
@@ -57,7 +56,7 @@
         <dependency>
             <groupId>it.polimi.sr.yasper</groupId>
             <artifactId>yasper-core</artifactId>
-            <version>1.0.2</version>
+            <version>1.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.apache.jena</groupId>

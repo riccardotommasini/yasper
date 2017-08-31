@@ -190,6 +190,11 @@ public class SPARQLQuery extends Query {
         return iri.toString();
     }
 
+    public SPARQLQuery setQResolver(IRIResolver resolver) {
+        setResolver(resolver);
+        return this;
+    }
+
     @Override
     public String toString() {
         return super.toString();
