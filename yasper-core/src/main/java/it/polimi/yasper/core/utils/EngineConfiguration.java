@@ -40,7 +40,7 @@ public class EngineConfiguration extends PropertiesConfiguration {
         return this.getBoolean(PARTIAL_WINDOW, true);
     }
 
-    public static EngineConfiguration getDefault()  {
+    public static EngineConfiguration getDefault() {
         URL resource = EngineConfiguration.class.getResource("/default.properties");
         try {
             return new EngineConfiguration(resource.getPath());
@@ -51,7 +51,7 @@ public class EngineConfiguration extends PropertiesConfiguration {
     }
 
 
-    public String getBaseIRI() {
-        return this.getString(BASE_IRI);
+    public String getBaseURI() {
+        return this.getString("rsp_engine.base_uri");
     }
 }

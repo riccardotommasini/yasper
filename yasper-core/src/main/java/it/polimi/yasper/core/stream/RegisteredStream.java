@@ -14,6 +14,10 @@ public class RegisteredStream implements Stream {
     private String stream;
     private String uri;
 
+    public String getInternalName() {
+        return e.getName();
+    }
+
     @Override
     public String getURI() {
         return uri;
