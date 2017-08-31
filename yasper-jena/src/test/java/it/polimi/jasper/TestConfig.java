@@ -4,10 +4,15 @@ import it.polimi.jasper.engine.JenaRSPQLEngineImpl;
 import it.polimi.jasper.engine.query.formatter.ResponseFormatterFactory;
 import it.polimi.yasper.core.query.ContinuousQuery;
 import it.polimi.yasper.core.query.execution.ContinuousQueryExecution;
+<<<<<<< HEAD
 import it.polimi.yasper.core.stream.Stream;
+=======
+import it.polimi.yasper.core.utils.EngineConfiguration;
+>>>>>>> d92d421... I noticed a mismatch between how the naming of the attribute is handle in the query and in the system.
 import it.polimi.yasper.core.utils.QueryConfiguration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.io.FileUtils;
+import org.apache.jena.riot.system.IRIResolver;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,12 +25,21 @@ public class TestConfig {
 
     public static void main(String[] args) throws InterruptedException, IOException, ConfigurationException {
 
-        JenaRSPQLEngineImpl sr = new JenaRSPQLEngineImpl(0);
         URL resource = TestConfig.class.getResource("/jasper.properties");
         QueryConfiguration config = new QueryConfiguration(resource.getPath());
+        EngineConfiguration ec = new EngineConfiguration(resource.getPath());
 
+<<<<<<< HEAD
         GraphStream painter = new GraphStream("Painter", "http://streamreasoning.org/iminds/massif/stream1", 1);
         GraphStream writer = new GraphStream("Writer", "stream2", 5);
+=======
+        JenaRSPQLEngineImpl sr = new JenaRSPQLEngineImpl(0, ec);
+
+        IRIResolver resolver = sr.getResolver();
+
+        GraphStream painter = new GraphStream("Painter", resolver.resolveToString("streams/stream1"), 1);
+        GraphStream writer = new GraphStream("Writer", resolver.resolveToString("streams/stream2"), 5);
+>>>>>>> d92d421... I noticed a mismatch between how the naming of the attribute is handle in the query and in the system.
 
         painter.setRSPEngine(sr);
         writer.setRSPEngine(sr);
@@ -36,7 +50,9 @@ public class TestConfig {
         painter.setRegistered_stream_uri(painter_registered.getURI());
         writer.setRegistered_stream_uri(writer_registered.getURI());
 
-        ContinuousQueryExecution ceq = sr.register(getQuery(), config);
+        String query = getQuery();
+        ContinuousQuery q = sr.parseQuery(query);
+        ContinuousQueryExecution ceq = sr.register(q, config);
         ContinuousQuery cq = ceq.getContinuousQuery();
 
         sr.register(cq, ResponseFormatterFactory.getGenericResponseSysOutFormatter(true)); // attaches a new *RSP-QL query to the SDS
