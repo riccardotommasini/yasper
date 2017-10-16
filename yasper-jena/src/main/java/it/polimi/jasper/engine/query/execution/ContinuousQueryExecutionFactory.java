@@ -1,12 +1,12 @@
 package it.polimi.jasper.engine.query.execution;
 
-import it.polimi.jasper.engine.BaselinesUtils;
 import it.polimi.jasper.engine.query.RSPQuery;
 import it.polimi.jasper.engine.reasoning.GenericRuleJenaTVGReasoner;
-import it.polimi.jasper.engine.reasoning.pellet.TVGReasonerPellet;
 import it.polimi.jasper.engine.reasoning.JenaTVGReasoner;
+import it.polimi.jasper.engine.reasoning.pellet.TVGReasonerPellet;
 import it.polimi.jasper.engine.sds.JenaSDS;
-import it.polimi.yasper.core.enums.Entailment;
+import it.polimi.yasper.core.engine.Entailment;
+import it.polimi.yasper.core.enums.EntailmentType;
 import it.polimi.yasper.core.enums.StreamOperator;
 import it.polimi.yasper.core.query.execution.ContinuousQueryExecution;
 import it.polimi.yasper.core.query.operators.r2s.RelationToStreamOperator;
@@ -15,7 +15,6 @@ import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.reasoner.ReasonerRegistry;
 import org.apache.jena.reasoner.rulesys.GenericRuleReasoner;
-import org.apache.jena.reasoner.rulesys.RDFSRuleReasoner;
 import org.apache.jena.reasoner.rulesys.Rule;
 
 import java.util.List;
@@ -56,8 +55,9 @@ public final class ContinuousQueryExecutionFactory extends QueryExecutionFactory
         return cqe;
     }
 
-    public static JenaTVGReasoner getGenericRuleReasoner(Entailment ent, Model tbox) {
+    public static JenaTVGReasoner getGenericRuleReasoner(Entailment e, Model tbox) {
         JenaTVGReasoner reasoner = null;
+        EntailmentType ent = e.getType();
         switch (ent) {
             case OWL2DL:
                 break;
@@ -72,15 +72,10 @@ public final class ContinuousQueryExecutionFactory extends QueryExecutionFactory
                 reasoner.bindSchema(tbox);
                 break;
             case RDFS:
-                ReasonerRegistry.getRDFSSimpleReasoner();
-                reasoner = getTvgReasoner(tbox, Rule.rulesFromURL(RDFSRuleReasoner.DEFAULT_RULES));
-                break;
             case RHODF:
-                reasoner = getTvgReasoner(tbox, Rule.rulesFromURL(BaselinesUtils.RHODF_RULE_SET_RUNTIME));
-                break;
-            case NONE:
+            case CUSTOM:
             default:
-                reasoner = null;
+                reasoner = getTvgReasoner(tbox, (List<Rule>) e.getRules());
         }
         return reasoner;
 

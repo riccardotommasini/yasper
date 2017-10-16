@@ -5,7 +5,7 @@ import it.polimi.jasper.engine.JenaRSPQLEngineImpl;
 import it.polimi.jasper.engine.instantaneous.InstantaneousModel;
 import it.polimi.jasper.engine.query.RSPQuery;
 import it.polimi.yasper.core.SDS;
-import it.polimi.yasper.core.enums.Entailment;
+import it.polimi.yasper.core.enums.EntailmentType;
 import it.polimi.yasper.core.enums.Maintenance;
 import it.polimi.yasper.core.query.ContinuousQuery;
 import it.polimi.yasper.core.query.execution.ContinuousQueryExecution;
@@ -45,7 +45,7 @@ public class JenaSDSImpl extends DatasetImpl implements Observer, JenaSDS {
     private Maintenance maintenanceType;
     @Setter
     @Getter
-    private Entailment ontoLang;
+    private EntailmentType ontoLang;
     private org.apache.jena.query.Query q;
     private Set<String> defaultWindowStreamNames;
     private Map<String, String> namedWindowStreamNames;
