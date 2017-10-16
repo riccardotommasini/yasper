@@ -32,6 +32,7 @@ public abstract class RSPQLEngine extends Observable implements RSPEngine {
     protected Map<String, ContinuousQueryExecution> queryExecutions;
     protected Map<String, ContinuousQuery> registeredQueries;
     protected Map<String, List<QueryResponseFormatter>> queryObservers;
+    protected Map<String, Entailment> entailments;
 
     protected Configuration cep_config;
     protected EngineConfiguration rsp_config;
@@ -53,6 +54,7 @@ public abstract class RSPQLEngine extends Observable implements RSPEngine {
         this.registeredStreams = new HashMap<>();
         this.queryObservers = new HashMap<>();
         this.queryExecutions = new HashMap<>();
+        this.entailments = new HashMap<>();
         this.cep_config = new Configuration();
         this.currentTimestamp = 0L;
         this.t0 = t0;
@@ -73,7 +75,6 @@ public abstract class RSPQLEngine extends Observable implements RSPEngine {
 
         //cep_config.addPlugInView("rspql", "win", "rspqlfact");
     }
-
 
     public RSPQLEngine(long t0) {
         this(t0, EngineConfiguration.getDefault());
