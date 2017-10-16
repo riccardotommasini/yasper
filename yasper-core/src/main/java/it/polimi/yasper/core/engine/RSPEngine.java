@@ -19,6 +19,10 @@ public interface RSPEngine extends EventProcessor<StreamItem> {
 
     void unregister(Stream s);
 
+    Entailment register(String id, String e);
+
+    void unregister(String id);
+
     ContinuousQuery parseQuery(String input);
 
     ContinuousQueryExecution register(ContinuousQuery q, QueryConfiguration c);
