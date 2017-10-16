@@ -19,7 +19,6 @@ import java.util.List;
  */
 public class GenericRuleJenaTVGReasoner extends GenericRuleReasoner implements JenaTVGReasoner {
 
-
     public GenericRuleJenaTVGReasoner(List<Rule> rules) {
         super(rules);
     }

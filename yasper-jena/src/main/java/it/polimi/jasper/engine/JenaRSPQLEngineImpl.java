@@ -2,20 +2,22 @@ package it.polimi.jasper.engine;
 
 import com.espertech.esper.client.EPServiceProviderManager;
 import com.espertech.esper.client.EPStatement;
-import it.polimi.jasper.engine.sds.JenaSDSImpl;
-import it.polimi.jasper.parser.streams.Window;
 import it.polimi.jasper.engine.instantaneous.InstantaneousGraph;
 import it.polimi.jasper.engine.instantaneous.InstantaneousGraphBase;
 import it.polimi.jasper.engine.instantaneous.InstantaneousModelCom;
 import it.polimi.jasper.engine.query.RSPQuery;
 import it.polimi.jasper.engine.query.execution.ContinuousQueryExecutionFactory;
+import it.polimi.jasper.engine.reasoning.EntailmentImpl;
 import it.polimi.jasper.engine.reasoning.JenaTVGReasoner;
 import it.polimi.jasper.engine.reasoning.TimeVaryingInfGraph;
 import it.polimi.jasper.engine.sds.JenaSDS;
+import it.polimi.jasper.engine.sds.JenaSDSImpl;
 import it.polimi.jasper.engine.stream.GraphStreamItem;
 import it.polimi.jasper.parser.RSPQLParser;
+import it.polimi.jasper.parser.streams.Window;
+import it.polimi.yasper.core.engine.Entailment;
 import it.polimi.yasper.core.engine.RSPQLEngine;
-import it.polimi.yasper.core.enums.Entailment;
+import it.polimi.yasper.core.enums.EntailmentType;
 import it.polimi.yasper.core.enums.Maintenance;
 import it.polimi.yasper.core.exceptions.UnregisteredQueryExeception;
 import it.polimi.yasper.core.exceptions.UnregisteredStreamExeception;
@@ -40,6 +42,8 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.impl.InfModelImpl;
 import org.apache.jena.rdf.model.impl.ModelCom;
+import org.apache.jena.reasoner.ReasonerRegistry;
+import org.apache.jena.reasoner.rulesys.Rule;
 import org.apache.jena.riot.system.IRIResolver;
 import org.parboiled.Parboiled;
 import org.parboiled.errors.ParseError;
@@ -59,6 +63,16 @@ public class JenaRSPQLEngineImpl extends RSPQLEngine {
         cep = EPServiceProviderManager.getProvider(this.getClass().getCanonicalName(), cep_config);
         cepAdm = cep.getEPAdministrator();
         cepRT = cep.getEPRuntime();
+
+        ReasonerRegistry.getRDFSSimpleReasoner();
+
+        //Adding default entailments
+        String ent = EntailmentType.RDFS.name();
+        entailments.put(ent, new EntailmentImpl(ent, Rule.rulesFromURL(BaselinesUtils.RDFS_RULE_SET_RUNTIME), EntailmentType.RDFS));
+        ent = EntailmentType.RHODF.name();
+        entailments.put(ent, new EntailmentImpl(ent, Rule.rulesFromURL(BaselinesUtils.RHODF_RULE_SET_RUNTIME), EntailmentType.RHODF));
+
+
     }
 
     public JenaRSPQLEngineImpl(long t0) {
@@ -83,6 +97,18 @@ public class JenaRSPQLEngineImpl extends RSPQLEngine {
     }
 
     @Override
+    public it.polimi.yasper.core.engine.Entailment register(String id, String e) {
+        EntailmentImpl customEntailment = new EntailmentImpl(id, Rule.parseRules(e), EntailmentType.CUSTOM);
+        entailments.put(id, customEntailment);
+        return customEntailment;
+    }
+
+    @Override
+    public void unregister(String id) {
+        entailments.remove(id);
+    }
+
+    @Override
     public ContinuousQueryExecution register(String q, QueryConfiguration c) {
         return register(parseQuery(q), c);
     }
@@ -92,9 +118,10 @@ public class JenaRSPQLEngineImpl extends RSPQLEngine {
         String tboxLocation = c.getTboxLocation();
         Model tbox = ModelFactory.createDefaultModel().read(tboxLocation);
         Maintenance maintenance = c.getSdsMaintainance();
-        Entailment entailment = c.getReasoningEntailment();
+        String entailment = c.getReasoningEntailment();
+
         if ("it.polimi.jasper.engine.query.RSPQuery".equals(c.getQueryClass())) {
-            return register((RSPQuery) q, tbox, maintenance, entailment, rsp_config.isRecursionEnables());
+            return register((RSPQuery) q, tbox, maintenance, entailments.get(entailment), rsp_config.isRecursionEnables());
         } else {
             throw new UnsuportedQueryClassExecption();
         }
