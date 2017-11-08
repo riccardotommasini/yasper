@@ -115,11 +115,6 @@ public class RSPQuery extends SPARQLQuery implements ContinuousQuery {
         return new ArrayList<String>();
     }
 
-    @Override
-    public List<String> getGraphURIs() {
-        return new ArrayList<String>();
-    }
-
     public List<String> getRSPNamedGraphURIs() {
         return super.getNamedGraphURIs();
     }

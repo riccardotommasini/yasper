@@ -1,12 +1,13 @@
 package it.polimi.jasper.engine.stream;
 
-import com.espertech.esper.client.EPStatement;
 import it.polimi.yasper.core.stream.StreamImpl;
 import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Created by riccardo on 10/07/2017.
  */
+@Setter
 @Getter
 public class RDFStream extends StreamImpl {
 
