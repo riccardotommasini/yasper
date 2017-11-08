@@ -32,7 +32,7 @@ public class StreamImpl implements Stream {
     public String toEPLSchema() {
         CreateSchemaClause schema = new CreateSchemaClause();
         schema.setSchemaName(EncodingUtils.encode(stream_uri));
-        schema.setInherits(new HashSet<String>(Arrays.asList(new String[]{"TStream"})));
+        schema.setInherits(new HashSet<>(Arrays.asList(new String[]{"TStream"})));
         List<SchemaColumnDesc> columns = new ArrayList<SchemaColumnDesc>();
         schema.setColumns(columns);
         StringWriter writer = new StringWriter();

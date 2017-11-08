@@ -10,6 +10,7 @@ import it.polimi.yasper.core.query.execution.ContinuousQueryExecution;
 import it.polimi.yasper.core.query.formatter.QueryResponseFormatter;
 import it.polimi.yasper.core.query.operators.s2r.EsperWindowOperator;
 import it.polimi.yasper.core.query.operators.s2r.WindowOperator;
+import it.polimi.yasper.core.stream.RegisteredStream;
 import it.polimi.yasper.core.stream.Stream;
 import it.polimi.yasper.core.stream.StreamItem;
 import it.polimi.yasper.core.utils.EncodingUtils;
@@ -76,6 +77,7 @@ public abstract class RSPQLEngine extends Observable implements RSPEngine {
         //cep_config.addPlugInView("rspql", "win", "rspqlfact");
     }
 
+
     public RSPQLEngine(long t0) {
         this(t0, EngineConfiguration.getDefault());
     }
@@ -96,22 +98,22 @@ public abstract class RSPQLEngine extends Observable implements RSPEngine {
     }
 
     public boolean process(StreamItem g) {
-        log.info("Current runtime is  [" + cepRT.getCurrentTime() + "]");
+        log.debug("Current runtime is  [" + cepRT.getCurrentTime() + "]");
 
         //Event time vs ingestion time
         long time = rsp_config.isUsingEventTime() ? g.getAppTimestamp() : g.getSysTimestamp();
 
         if (cepRT.getCurrentTime() < time) {
-            log.info("Sent time event with current [" + time + "]");
+            log.debug("Sent time event with current [" + time + "]");
             cepRT.sendEvent(new CurrentTimeEvent(time));
             currentTimestamp = time;// TODO
-            log.info("Current runtime is now [" + cepRT.getCurrentTime() + "]");
+            log.debug("Current runtime is now [" + cepRT.getCurrentTime() + "]");
         }
 
         cepRT.sendEvent(g, EncodingUtils.encode(g.getStreamURI()));
-        log.info("Received Stimulus [" + g + "]");
+        log.debug("Received Stimulus [" + g + "]");
         rspEventsNumber++;
-        log.info("Current runtime is  [" + this.cepRT.getCurrentTime() + "]");
+        log.debug("Current runtime is  [" + this.cepRT.getCurrentTime() + "]");
 
         return true;
     }
@@ -122,8 +124,12 @@ public abstract class RSPQLEngine extends Observable implements RSPEngine {
         return false;
     }
 
-    protected EPStatement getStream(String uri) {
-        return cepAdm.getStatement(EncodingUtils.encode(uri));
+    public Stream getStream(String s){
+        return registeredStreams.get(s);
+    }
+
+    public ContinuousQuery getQuery(String q){
+        return registeredQueries.get(q);
     }
 
     protected EPStatement createStream(String stream, String uri) {

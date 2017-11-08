@@ -7,5 +7,4 @@ public interface Stream {
 
     String getURI();
 
-    String toEPLSchema();
 }

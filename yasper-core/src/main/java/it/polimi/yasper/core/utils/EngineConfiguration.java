@@ -51,4 +51,7 @@ public class EngineConfiguration extends PropertiesConfiguration {
     }
 
 
+    public String getBaseIRI() {
+        return this.getString(BASE_IRI);
+    }
 }

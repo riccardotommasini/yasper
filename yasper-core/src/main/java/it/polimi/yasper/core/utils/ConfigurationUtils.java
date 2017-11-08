@@ -15,6 +15,7 @@ public class ConfigurationUtils {
 
     public static final String ENGINE = "rsp_engine.";
     public static final String QUERY = "rsp_query.";
+    public static final String BASE_IRI = ENGINE + "base_iri";
     public static final String QUERY_CLASS = ENGINE + "query_class";
     public static final String TBOX_LOCATION = ENGINE + "tbox_location";
     public static final String SDS_MAINTAINANCE = ENGINE + "sds.mantainance";
