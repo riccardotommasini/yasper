@@ -23,11 +23,12 @@ import org.parboiled.Rule;
 public class SPARQLParser extends Lexer {
 
     public Rule Query() {
-        return Sequence(push(new SPARQLQuery()), WS(), Prologue(),
+        return Sequence(push(new SPARQLQuery()), WS(), pushQuery(((SPARQLQuery) pop(0)).setExternalResolver(getResolver())), Prologue(),
                 FirstOf(SelectQuery(), ConstructQuery(), AskQuery(), DescribeQuery()), ValuesClause(), EOI);
     }
 
     public Rule Prologue() {
+
         return Sequence(Optional(BaseDecl()), ZeroOrMore(PrefixDecl()));
     }
 

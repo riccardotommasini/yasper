@@ -176,6 +176,11 @@ public class SPARQLQuery extends Query {
         return this;
     }
 
+    public SPARQLQuery setExternalResolver(IRIResolver resolver) {
+        getPrologue().setResolver(resolver);
+        return this;
+    }
+
     public String resolveSilent(String iriStr) {
         if (resolver == null) {
             resolver = IRIResolver.create();

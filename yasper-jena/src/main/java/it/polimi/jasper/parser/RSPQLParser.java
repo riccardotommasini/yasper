@@ -17,7 +17,7 @@ public class RSPQLParser extends SPARQLParser {
 
     @Override
     public Rule Query() {
-        return Sequence(push(new RSPQuery()), WS(), Optional(Prologue(), Registration()),
+        return Sequence(push(new RSPQuery()), WS(), pushQuery(((SPARQLQuery) pop(0)).setExternalResolver(getResolver())), Optional(Registration(), Prologue()),
                 FirstOf(SelectQuery(), ConstructQuery(), AskQuery(), DescribeQuery()), EOI);
     }
 

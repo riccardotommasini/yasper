@@ -180,6 +180,7 @@ public class ParserUtils extends BaseParser<Object> {
     }
 
     public String resolvePNAME(String match) {
+
         // TODO I think this is correct beacause subqueries refer to the same
         // prologue
         String s = getQuery(-1).getQ().getPrologue().expandPrefixedName(match);
