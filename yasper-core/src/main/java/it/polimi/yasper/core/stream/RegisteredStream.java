@@ -11,15 +11,13 @@ public class RegisteredStream implements Stream {
 
     private Stream s;
     private EPStatement e;
+    private String stream;
+    private String uri;
 
     @Override
     public String getURI() {
-        return s.getURI();
+        return uri;
     }
 
-    @Override
-    public String toEPLSchema() {
-        return e.toString();
-    }
 
 }
