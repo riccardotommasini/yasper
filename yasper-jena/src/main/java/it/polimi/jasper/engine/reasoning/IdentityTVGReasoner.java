@@ -16,6 +16,7 @@ import org.apache.jena.reasoner.ReasonerException;
  * Created by riccardo on 06/07/2017.
  */
 public class IdentityTVGReasoner implements JenaTVGReasoner {
+
     @Override
     public Reasoner bindSchema(Graph tbox) throws ReasonerException {
         return this;

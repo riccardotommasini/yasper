@@ -2,6 +2,8 @@ package it.polimi.jasper.engine;
 
 import com.espertech.esper.client.EPServiceProviderManager;
 import com.espertech.esper.client.EPStatement;
+import com.espertech.esper.client.soda.CreateSchemaClause;
+import com.espertech.esper.client.soda.SchemaColumnDesc;
 import it.polimi.jasper.engine.instantaneous.InstantaneousGraph;
 import it.polimi.jasper.engine.instantaneous.InstantaneousGraphBase;
 import it.polimi.jasper.engine.instantaneous.InstantaneousModelCom;
@@ -50,10 +52,13 @@ import org.parboiled.errors.ParseError;
 import org.parboiled.parserunners.ReportingParseRunner;
 import org.parboiled.support.ParsingResult;
 
+import java.io.StringWriter;
 import java.util.*;
 
 @Log4j
 public class JenaRSPQLEngineImpl extends RSPQLEngine {
+
+    private IRIResolver resolver;
 
     public JenaRSPQLEngineImpl(long t0, EngineConfiguration ec) {
         super(t0, ec);
@@ -71,6 +76,7 @@ public class JenaRSPQLEngineImpl extends RSPQLEngine {
         entailments.put(ent, new EntailmentImpl(ent, Rule.rulesFromURL(BaselinesUtils.RDFS_RULE_SET_RUNTIME), EntailmentType.RDFS));
         ent = EntailmentType.RHODF.name();
         entailments.put(ent, new EntailmentImpl(ent, Rule.rulesFromURL(BaselinesUtils.RHODF_RULE_SET_RUNTIME), EntailmentType.RHODF));
+        resolver = IRIResolver.create(rsp_config.getBaseIRI());
 
 
     }
@@ -82,18 +88,21 @@ public class JenaRSPQLEngineImpl extends RSPQLEngine {
     @Override
     public Stream register(Stream s) {
         log.info("Registering Stream [" + s.getURI() + "]");
-        EPStatement e = createStream(s.toEPLSchema(), s.getURI());
+        String stream = toEPLSchema(s);
+        String uri = resolver.resolveToStringSilent(s.getURI());
+        EPStatement e = createStream(stream, uri);
         registeredStreams.put(s.getURI(), s);
-        return new RegisteredStream(s, e);
+        return new RegisteredStream(s, e, stream, uri);
     }
 
     @Override
     public void unregister(Stream s) {
         log.info("Unregistering Stream [" + s + "]");
-        EPStatement statement = cepAdm.getStatement(EncodingUtils.encode(s.getURI()));
+        String uri = resolver.resolveToStringSilent(s.getURI());
+        EPStatement statement = cepAdm.getStatement(EncodingUtils.encode(uri));
         statement.removeAllListeners();
         statement.destroy();
-        Stream remove = registeredStreams.remove(EncodingUtils.encode(s.getURI()));
+        Stream remove = registeredStreams.remove(EncodingUtils.encode(uri));
     }
 
     @Override
@@ -145,7 +154,9 @@ public class JenaRSPQLEngineImpl extends RSPQLEngine {
 
         Model def = loadStaticGraph(bq, new ModelCom(new InstantaneousGraphBase()));
 
-        JenaTVGReasoner reasoner = ContinuousQueryExecutionFactory.getGenericRuleReasoner(entailment, tbox);
+        JenaTVGReasoner reasoner = entailment != null ?
+                ContinuousQueryExecutionFactory.getGenericRuleReasoner(entailment, tbox) :
+                ContinuousQueryExecutionFactory.emptyReasoner();
 
         InfModel kb_star = ModelFactory.createInfModel(reasoner.bind(def.getGraph()));
 
@@ -164,6 +175,11 @@ public class JenaRSPQLEngineImpl extends RSPQLEngine {
         queryExecutions.put(bq.getID(), qe);
 
         return qe;
+    }
+
+    @Override
+    public ContinuousQuery getQuery(String q){
+        return super.getQuery(this.resolver.resolveToStringSilent(q));
     }
 
     @Override
@@ -223,8 +239,7 @@ public class JenaRSPQLEngineImpl extends RSPQLEngine {
         log.info("Parsing Query [" + input + "]");
 
         RSPQLParser parser = Parboiled.createParser(RSPQLParser.class);
-
-        parser.setResolver(IRIResolver.create());
+        parser.setResolver(resolver);
 
         ParsingResult<RSPQuery> result = new ReportingParseRunner(parser.Query()).run(input);
 
@@ -321,7 +336,7 @@ public class JenaRSPQLEngineImpl extends RSPQLEngine {
 
     private Model loadStaticGraph(RSPQuery bq, Model def) {
         //Default Static Graph
-        if (bq.getGraphURIs() != null)
+        if (bq.getRSPGraphURIs() != null)
             for (String g : bq.getGraphURIs()) {
                 log.info(g);
                 if (!isWindow(bq.getWindows(), g)) {
@@ -344,5 +359,16 @@ public class JenaRSPQLEngineImpl extends RSPQLEngine {
             }
         }
         return false;
+    }
+
+    public String toEPLSchema(Stream s) {
+        CreateSchemaClause schema = new CreateSchemaClause();
+        schema.setSchemaName(EncodingUtils.encode(resolver.resolveToStringSilent(s.getURI())));
+        schema.setInherits(new HashSet<>(Arrays.asList(new String[]{"TStream"})));
+        List<SchemaColumnDesc> columns = new ArrayList<SchemaColumnDesc>();
+        schema.setColumns(columns);
+        StringWriter writer = new StringWriter();
+        schema.toEPL(writer);
+        return writer.toString();
     }
 }

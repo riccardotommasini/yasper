@@ -2,6 +2,7 @@ package it.polimi.jasper.engine.query.execution;
 
 import it.polimi.jasper.engine.query.RSPQuery;
 import it.polimi.jasper.engine.reasoning.GenericRuleJenaTVGReasoner;
+import it.polimi.jasper.engine.reasoning.IdentityTVGReasoner;
 import it.polimi.jasper.engine.reasoning.JenaTVGReasoner;
 import it.polimi.jasper.engine.reasoning.pellet.TVGReasonerPellet;
 import it.polimi.jasper.engine.sds.JenaSDS;
@@ -13,10 +14,11 @@ import it.polimi.yasper.core.query.operators.r2s.RelationToStreamOperator;
 import it.polimi.yasper.core.reasoning.TVGReasoner;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.rdf.model.Model;
-import org.apache.jena.reasoner.ReasonerRegistry;
+import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.reasoner.rulesys.GenericRuleReasoner;
 import org.apache.jena.reasoner.rulesys.Rule;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -28,7 +30,7 @@ public final class ContinuousQueryExecutionFactory extends QueryExecutionFactory
 
     static public ContinuousQueryExecution create(RSPQuery query, JenaSDS sds, TVGReasoner r) {
         ContinuousQueryExecution cqe;
-        StreamOperator r2S = query.getR2S();
+        StreamOperator r2S = query.getR2S()!= null ? query.getR2S() : StreamOperator.RSTREAM;
         RelationToStreamOperator s2r;
         switch (r2S) {
             case DSTREAM:
@@ -38,8 +40,6 @@ public final class ContinuousQueryExecutionFactory extends QueryExecutionFactory
                 s2r = RelationToStreamOperator.ISTREAM.get();
                 break;
             case RSTREAM:
-                s2r = RelationToStreamOperator.RSTREAM.get();
-                break;
             default:
                 s2r = RelationToStreamOperator.RSTREAM.get();
                 break;
@@ -85,5 +85,9 @@ public final class ContinuousQueryExecutionFactory extends QueryExecutionFactory
         GenericRuleJenaTVGReasoner reasoner = new GenericRuleJenaTVGReasoner(rules);
         reasoner.setMode(GenericRuleReasoner.HYBRID);
         return (GenericRuleJenaTVGReasoner) reasoner.bindSchema(tbox);
+    }
+
+    public static JenaTVGReasoner emptyReasoner() {
+        return getTvgReasoner(ModelFactory.createDefaultModel(), new ArrayList<>());
     }
 }
