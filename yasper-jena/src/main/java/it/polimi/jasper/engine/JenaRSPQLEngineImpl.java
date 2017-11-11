@@ -2,6 +2,8 @@ package it.polimi.jasper.engine;
 
 import com.espertech.esper.client.EPServiceProviderManager;
 import com.espertech.esper.client.EPStatement;
+import com.espertech.esper.client.soda.CreateSchemaClause;
+import com.espertech.esper.client.soda.SchemaColumnDesc;
 import it.polimi.jasper.engine.instantaneous.InstantaneousGraph;
 import it.polimi.jasper.engine.instantaneous.InstantaneousGraphBase;
 import it.polimi.jasper.engine.instantaneous.InstantaneousModelCom;
@@ -15,6 +17,7 @@ import it.polimi.jasper.engine.sds.JenaSDSImpl;
 import it.polimi.jasper.engine.stream.GraphStreamItem;
 import it.polimi.jasper.parser.RSPQLParser;
 import it.polimi.jasper.parser.streams.Window;
+import it.polimi.yasper.core.engine.Entailment;
 import it.polimi.yasper.core.engine.RSPQLEngine;
 import it.polimi.yasper.core.enums.EntailmentType;
 import it.polimi.yasper.core.enums.Maintenance;
@@ -251,7 +254,6 @@ public class JenaRSPQLEngineImpl extends RSPQLEngine {
 
     @Override
     public ContinuousQuery parseQuery(String input) {
-<<<<<<< HEAD
         log.info("Parsing Query [" + input + "]");
 
         ParsingResult<RSPQuery> result = new ReportingParseRunner(parser.Query()).run(input);
@@ -261,13 +263,9 @@ public class JenaRSPQLEngineImpl extends RSPQLEngine {
                 log.info(input.substring(0, arg.getStartIndex()) + "|->" + input.substring(arg.getStartIndex(), arg.getEndIndex()) + "<-|" + input.substring(arg.getEndIndex() + 1, input.length() - 1));
             }
         }
-<<<<<<< HEAD
         RSPQuery query = result.resultValue;
         log.info("Final Query [" + query + "]");
         return query;
-=======
-        return result.resultValue;
->>>>>>> 0d0d3db19324bd0be27b794b12ae18bae86a2475
     }
 
     private void addWindows(RSPQuery bq, JenaSDS sds, JenaTVGReasoner reasoner) {

@@ -3,11 +3,14 @@ package it.polimi.jasper.parser;
 import it.polimi.jasper.parser.sparql.Function;
 import it.polimi.jasper.parser.sparql.Prefix;
 import it.polimi.jasper.parser.sparql.ValuesClauseBuilder;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.jena.atlas.lib.EscapeStr;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.graph.Node;
 import org.apache.jena.graph.NodeFactory;
 import org.apache.jena.graph.Node_URI;
+import org.apache.jena.riot.system.IRIResolver;
 import org.apache.jena.sparql.core.Var;
 import org.apache.jena.sparql.expr.*;
 import org.apache.jena.sparql.expr.aggregate.AggregateRegistry;
@@ -21,6 +24,9 @@ import org.parboiled.Rule;
  * Created by Riccardo on 09/08/16.
  */
 public class SPARQLParser extends Lexer {
+    @Getter
+    @Setter
+    private IRIResolver resolver;
 
     public Rule Query() {
         return Sequence(push(new SPARQLQuery()), WS(), pushQuery(((SPARQLQuery) pop(0)).setExternalResolver(getResolver())), Prologue(),
