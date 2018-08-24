@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>it.polimi.yasper.core.spe.report.strategies.OnWindowClose</OriginalElement>
+  <nodes>
+    <node x="66.5" y="294.5">it.polimi.yasper.core.spe.report.strategies.OnWindowClose</node>
+    <node x="906.5" y="-7.5">it.polimi.yasper.core.spe.report.Report</node>
+    <node x="466.5" y="-19.0">it.polimi.yasper.core.spe.report.ReportImpl</node>
+    <node x="66.5" y="174.5">it.polimi.yasper.core.spe.report.strategies.ReportingStrategy</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="it.polimi.yasper.core.spe.report.strategies.OnWindowClose" target="it.polimi.yasper.core.spe.report.strategies.ReportingStrategy">
+      <point x="0.0" y="-25.5" />
+      <point x="0.0" y="25.5" />
+    </edge>
+    <edge source="it.polimi.yasper.core.spe.report.Report" target="it.polimi.yasper.core.spe.report.strategies.ReportingStrategy">
+      <point x="0.0" y="47.5" />
+      <point x="1080.0" y="200.0" />
+      <point x="173.5" y="0.0" />
+    </edge>
+    <edge source="it.polimi.yasper.core.spe.report.ReportImpl" target="it.polimi.yasper.core.spe.report.Report">
+      <point x="173.5" y="0.0" />
+      <point x="-173.5" y="0.0" />
+    </edge>
+    <edge source="it.polimi.yasper.core.spe.report.ReportImpl" target="it.polimi.yasper.core.spe.report.strategies.ReportingStrategy">
+      <point x="0.0" y="59.0" />
+      <point x="640.0" y="180.0" />
+      <point x="173.5" y="-20.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.0" x="410.5" y="182.0" />
+  <SelectedNodes>
+    <node>it.polimi.yasper.core.spe.report.Report</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Properties</Category>
+    <Category>Methods</Category>
+    <Category>Fields</Category>
+    <Category>Constructors</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
