@@ -6,7 +6,6 @@ import it.polimi.yasper.core.spe.report.Report;
 import it.polimi.yasper.core.spe.report.ReportGrain;
 import it.polimi.yasper.core.spe.tick.Tick;
 import it.polimi.yasper.core.spe.tick.Ticker;
-import it.polimi.yasper.core.spe.tick.TickerImpl;
 import it.polimi.yasper.core.spe.time.Time;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.rdf.api.IRI;

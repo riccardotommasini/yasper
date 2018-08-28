@@ -6,6 +6,8 @@ import it.polimi.yasper.core.spe.operators.s2r.execution.instance.Window;
 import it.polimi.yasper.core.spe.time.TimeFactory;
 import it.polimi.yasper.core.spe.time.TimeInstant;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 /**
