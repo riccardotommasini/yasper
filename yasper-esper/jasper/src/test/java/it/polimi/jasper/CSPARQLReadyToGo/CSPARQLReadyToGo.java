@@ -48,7 +48,7 @@ public class CSPARQLReadyToGo {
             case WHO_LIKES_WHAT:
                 System.out.println("WHO_LIKES_WHAT example");
 
-                writer = new LBSMARDFStreamTestGenerator("Writer", "http://streamreasoning.org/jasper/streams/stream2", 5);
+                writer = new LBSMARDFStreamTestGenerator("Writer", "http://streamreasoning.org/CSPARQLEngine/streams/stream2", 5);
                 register = sr.register(writer);
                 writer.setWritable(register);
 
@@ -73,7 +73,7 @@ public class CSPARQLReadyToGo {
 
                 break;
             case HOW_MANY_USERS_LIKE_THE_SAME_OBJ:
-                writer = new LBSMARDFStreamTestGenerator("Writer", "http://streamreasoning.org/jasper/streams/stream2", 5);
+                writer = new LBSMARDFStreamTestGenerator("Writer", "http://streamreasoning.org/CSPARQLEngine/streams/stream2", 5);
                 register = sr.register(writer);
                 writer.setWritable(register);
 
@@ -89,11 +89,11 @@ public class CSPARQLReadyToGo {
                 break;
 
             case MULTI_STREAM:
-                writer = new LBSMARDFStreamTestGenerator("Writer", "http://streamreasoning.org/jasper/streams/stream2", 5);
+                writer = new LBSMARDFStreamTestGenerator("Writer", "http://streamreasoning.org/CSPARQLEngine/streams/stream2", 5);
                 register = sr.register(writer);
                 writer.setWritable(register);
 
-                LBSMARDFStreamTestGenerator writer2 = new LBSMARDFStreamTestGenerator("Writer", "http://streamreasoning.org/jasper/streams/stream3", 5);
+                LBSMARDFStreamTestGenerator writer2 = new LBSMARDFStreamTestGenerator("Writer", "http://streamreasoning.org/CSPARQLEngine/streams/stream3", 5);
                 DataStreamImpl<Graph> register2 = sr.register(writer2);
                 writer2.setWritable(register2);
 
