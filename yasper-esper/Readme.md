@@ -32,7 +32,7 @@
  </repositories>
 <dependency>
    <groupId>com.github.riccardotommasini.yasper</groupId>
-     <artifactId>seraph</artifactId>
+     <artifactId>jasper</artifactId>
        <version>${tag}</version>
  </dependency>
 ```
