@@ -13,7 +13,7 @@
     <version>2.5.0</version>
 
     <properties>
-        <jena.version>3.14.0</jena.version>
+        <jena.version>4.2.0</jena.version>
     </properties>
 
     <dependencies>
